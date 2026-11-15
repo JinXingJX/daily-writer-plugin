@@ -1,0 +1,18 @@
+node_modules/
+/dist/
+.daily-plugin/dist/
+*.local
+.DS_Store
+.env
+.env.*
+*.log
+.tmp-*
+.daily/
+.daliy/
+/writing/
+# Locally collected passages have no redistribution license; keep them private.
+/src/ai/presets/ref-*.txt
+
+# prompt-eval scratch output
+scripts/prompt-eval/.cmp-*.txt
+scripts/prompt-eval/.tmp-*.txt

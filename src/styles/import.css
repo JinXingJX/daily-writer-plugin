@@ -1,0 +1,7 @@
+/* import */
+.w-dropzone{display:flex;flex-direction:column;align-items:center;gap:12px;border:2px dashed var(--line-strong);border-radius:14px;padding:32px 20px;color:var(--text-soft);text-align:center}
+.w-dropzone.over{border-color:var(--tone);background:var(--tone-soft)}
+.w-dropzone p{margin:0}
+.w-workspace-list{display:flex;width:100%;max-height:240px;flex-direction:column;overflow:auto;text-align:left}
+.w-import p{margin:0 0 10px}
+.w-import-preview{max-height:280px;overflow:auto;border:1px solid var(--line);border-radius:10px;padding:6px 10px}

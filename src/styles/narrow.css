@@ -1,0 +1,18 @@
+/* narrow windows: the assistant slides over the content instead of squeezing it */
+.w-assist.overlay{position:fixed;top:0;right:0;bottom:0;z-index:30;width:min(384px,92cqw);box-shadow:var(--shadow-pop)}
+.w-assist-backdrop{position:fixed;inset:0;z-index:29;background:rgba(20,20,24,.24);animation:w-fade var(--t-base)}
+.w-mention-menu{position:absolute;bottom:100%;left:8px;z-index:10;display:flex;min-width:200px;max-height:240px;flex-direction:column;overflow:auto;margin-bottom:4px;border-radius:10px;background:var(--surface);padding:4px;box-shadow:var(--shadow-pop)}
+.w-mention-menu button{border:0;border-radius:6px;background:transparent;padding:5px 8px;font-size:12.5px;text-align:left}
+.w-mention-menu button.active,.w-mention-menu button:hover{background:var(--tone-soft)}
+.w-comment{border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:8px;background:var(--surface);padding:8px 10px;font-size:12.5px}
+.w-comment.warning{border-left-color:var(--warning)}
+.w-comment.error{border-left-color:var(--danger)}
+.w-comment.resolved{opacity:.55}
+.w-comment p{margin:4px 0;line-height:1.6}
+.w-comment-quote{border:0;background:transparent;padding:0;color:var(--text-muted);font-family:var(--serif);font-size:12.5px;text-align:left}
+button.w-comment-quote:hover{color:var(--accent)}
+.w-history-list{display:flex;flex-direction:column;gap:2px}
+.w-history-item{display:flex;align-items:center;gap:8px;border:0;border-radius:8px;background:transparent;padding:6px 8px;font-size:12.5px;text-align:left}
+.w-history-item:hover{background:var(--muted)}
+.w-history-item.active{background:var(--surface);box-shadow:var(--shadow-raised)}
+.w-history-preview{border-top:1px solid var(--line);padding-top:10px}

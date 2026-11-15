@@ -1,0 +1,21 @@
+{
+  "identifier": "daily.writer",
+  "name": "Writer",
+  "description": "Long-form fiction workbench: volumes and chapters, story bible, story map, and an AI story memory that reads million-word manuscripts to plan, draft and continuity-check new chapters. Every AI edit is reviewable paragraph by paragraph.",
+  "payloadHint": "Optional JSON payload such as {\"projectId\":\"writer-...\"}.",
+  "version": "0.2.0",
+  "author": "Daily Writer",
+  "entry": "dist/plugin.js",
+  "contributes": {
+    "views": [
+      {
+        "id": "writer.workbench",
+        "title": "Writer",
+        "icon": "notebook-pen"
+      }
+    ]
+  },
+  "settingsSchema": {},
+  "devEntry": "src/main.tsx",
+  "activation": "startup"
+}

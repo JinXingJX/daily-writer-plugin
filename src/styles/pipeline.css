@@ -1,0 +1,27 @@
+/* background pipeline */
+.w-pipeline{display:grid;height:100%;grid-template-columns:260px minmax(0,1fr);min-height:0}
+.w-pipeline-runs{display:flex;flex-direction:column;gap:2px;overflow:auto;border-right:1px solid var(--line);background:var(--panel);padding:12px 10px}
+.w-pipeline-run{display:flex;flex-direction:column;gap:2px;border:0;border-radius:10px;background:none;padding:10px 12px;transition:background-color var(--t-quick);color:var(--text);text-align:left;cursor:pointer}
+.w-pipeline-run:hover{background:rgba(127,127,127,.09)}
+.w-pipeline-run.active{background:var(--surface);box-shadow:var(--shadow-raised)}
+.w-pipeline-run.error b{color:var(--danger)}
+.w-pipeline-run.awaiting b{color:var(--warning)}
+.w-pipeline-run span{font-size:11px}
+.w-pipeline-detail{overflow:auto;padding:28px clamp(20px,3cqw,48px) 64px}
+.w-pipeline-steps{display:flex;flex-direction:column;gap:2px;margin:10px 0;padding:0;list-style:none}
+.w-pipeline-step{border-left:2px solid var(--line);border-radius:0 10px 10px 0;padding:8px 10px 10px 14px;transition:border-color var(--t-base),background-color var(--t-quick)}
+.w-pipeline-step:hover{background:rgba(127,127,127,.05)}
+.w-pipeline-step.done{border-left-color:var(--success)}
+.w-pipeline-step.failed{border-left-color:var(--danger)}
+.w-pipeline-step.awaiting{border-left-color:var(--warning)}
+.w-pipeline-step.running{border-left-color:var(--tone)}
+.w-pipeline-step>p{margin:2px 0 0 26px;font-size:12px}
+.w-pipeline-step progress{width:120px;height:6px}
+.w-step-dot{display:inline-block;width:9px;height:9px;flex:none;border-radius:50%;background:var(--line-strong);transition:background-color var(--t-base)}
+.w-step-dot.done{background:var(--success)}
+.w-step-dot.failed{background:var(--danger)}
+.w-step-dot.awaiting,.w-step-dot.stale{background:var(--warning)}
+.w-step-dot.running{background:var(--tone);animation:w-pulse 1.2s infinite}
+.w-step-detail{margin:8px 0 0 26px;font-size:13px;animation:w-rise var(--t-base) var(--ease)}
+.w-draft-preview{max-height:280px;overflow:auto;border-radius:6px;background:var(--inset);padding:8px;font-family:var(--serif);white-space:pre-wrap}
+@container daily-view (max-width:720px){.w-pipeline{grid-template-columns:1fr}.w-pipeline-runs{max-height:30cqh;border-right:0;border-bottom:1px solid var(--line)}}

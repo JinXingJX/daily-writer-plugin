@@ -1,0 +1,50 @@
+{
+  "name": "daily-writer-plugin",
+  "private": true,
+  "version": "0.2.0",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 5174",
+    "build": "tsc && vite build && npm run verify:bundle",
+    "preview": "vite preview --host 127.0.0.1 --port 5174",
+    "test": "vitest run",
+    "verify:bundle": "node scripts/verify-bundle.mjs"
+  },
+  "dependencies": {
+    "@codemirror/commands": "^6.11.1",
+    "@codemirror/lang-markdown": "^6.5.2",
+    "@codemirror/language": "^6.13.1",
+    "@codemirror/search": "^6.7.2",
+    "@codemirror/state": "^6.7.6",
+    "@codemirror/view": "^6.43.14",
+    "@daily/plugin-sdk": "file:../daliy/packages/plugin-sdk",
+    "@xyflow/react": "^12.12.0",
+    "lucide-react": "^1.7.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-markdown": "^10.1.0",
+    "remark-breaks": "^4.0.0",
+    "remark-gfm": "^4.0.1"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "@vitejs/plugin-react": "^4.6.0",
+    "typescript": "~5.8.3",
+    "vite": "^6.4.6",
+    "vitest": "^5.1.0"
+  },
+  "description": "Long-form fiction workbench plugin for Daily",
+  "author": "JinXingJX",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JinXingJX/daily-writer-plugin.git"
+  },
+  "bugs": {
+    "url": "https://github.com/JinXingJX/daily-writer-plugin/issues"
+  }
+}

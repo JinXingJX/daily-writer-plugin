@@ -1,0 +1,5 @@
+/* rendered manuscript preview: same typography as the editor */
+.w-markdown.w-manuscript-md{min-height:50cqh;font-family:var(--serif);font-size:var(--w-font-size,17px);line-height:var(--w-line-height,1.95)}
+.w-manuscript-md h1{font-size:1.5em}.w-manuscript-md h2{font-size:1.3em}.w-manuscript-md h3{font-size:1.15em}
+.w-manuscript-md h1,.w-manuscript-md h2,.w-manuscript-md h3,.w-manuscript-md h4{margin:1.2em 0 .5em;font-weight:600}
+.w-manuscript-md p{margin:0 0 .6em}

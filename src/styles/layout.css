@@ -1,0 +1,20 @@
+/* app layout: activity bar · chapter rail · page · assistant */
+.w-app{position:relative;display:flex;height:100cqh;overflow:hidden;background:var(--bg)}
+.w-main{display:flex;min-width:0;flex:1;flex-direction:column;background:var(--paper)}
+.w-view{position:relative;display:flex;min-height:0;flex:1;flex-direction:column;animation:w-fade var(--t-base) var(--ease)}
+.w-save{display:inline-flex;flex:none;align-items:center;gap:6px;padding:0 8px;color:var(--text-muted);font-size:12px;white-space:nowrap}
+.w-save-dot{width:6px;height:6px;border-radius:50%;background:var(--success);transition:background-color var(--t-base)}
+.w-save.dirty .w-save-dot,.w-save.saving .w-save-dot{background:var(--warning)}
+.w-save.saving .w-save-dot{animation:w-pulse 1s infinite}
+.w-save.error{color:var(--danger)}.w-save.error .w-save-dot{background:var(--danger)}
+button.w-save{height:28px;border:1px solid var(--danger-line);border-radius:999px;background:var(--danger-soft);padding:0 10px;animation:w-rise var(--t-base) var(--ease)}
+button.w-save:hover{border-color:var(--danger)}
+.w-kbd{display:inline-block;flex:none;border:1px solid var(--line-strong);border-radius:4px;background:var(--surface);padding:0 4px;color:var(--text-muted);font-family:var(--mono);font-size:10.5px;font-weight:400;line-height:16px}
+/* focus: panes leave, the bar recedes until hovered */
+.w-app.focus .w-app.focus .w-topbar:hover,.w-app.focus .w-topbar:focus-within{opacity:1}
+.w-drawer-backdrop{position:fixed;inset:0;z-index:29;background:rgba(20,20,24,.24);animation:w-fade var(--t-base)}
+/* welcome */
+.w-welcome{display:grid;min-height:100cqh;place-items:center;padding:24px}
+.w-welcome section{width:min(560px,100%);animation:w-rise var(--t-panel) var(--ease)}
+.w-welcome h1{margin:20px 0 0;color:var(--text-strong);font-family:var(--serif);font-size:30px;line-height:1.3}
+.w-welcome p{margin:10px 0 24px;color:var(--text-soft);font-size:15px;line-height:1.75}
