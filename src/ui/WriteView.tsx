@@ -1,6 +1,6 @@
 import { onViewKeyDown } from "../view";
 import { cancelWriterTask } from "../worker/taskClient";
-import { Maximize2, Minimize2, PanelLeft, PanelRight } from "lucide-react";
+import { Maximize2, Minimize2 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { docKey, docTitle, orderedChapters, readDoc, rootDocInfo, UNTITLED_CHAPTER } from "../domain/documents";
 import { countWords } from "../domain/words";
@@ -34,10 +34,6 @@ export type WriteViewProps = {
   notes: MarginNote[];
   activeNote: string | null;
   onActiveNote: (id: string) => void;
-  railOpen: boolean;
-  onToggleRail: () => void;
-  marginOpen: boolean;
-  onToggleMargin: () => void;
   /** The selection panel, when there is no margin to hold it. */
   floatingPanel: React.ReactNode;
 };
@@ -51,7 +47,7 @@ function typingInField(event: KeyboardEvent) {
 const SAVE_LABELS = { saved: "已保存", saving: "保存中…", dirty: "未保存", error: "保存失败" };
 
 /** The page: nothing above the prose but where you are; actions wait at the end of the text. */
-export function WriteView({ editorRef, pageScrollRef, onWriteNextChapter, onBlocked, onSelectionChange, onSuggestionChange, onOpenSettings, notes, activeNote, onActiveNote, railOpen, onToggleRail, marginOpen, onToggleMargin, floatingPanel }: WriteViewProps) {
+export function WriteView({ editorRef, pageScrollRef, onWriteNextChapter, onBlocked, onSelectionChange, onSuggestionChange, onOpenSettings, notes, activeNote, onActiveNote, floatingPanel }: WriteViewProps) {
   const writer = useWriter();
   const { project, draft, active, prefs, memory, saveState } = writer;
   const [selectionWords, setSelectionWords] = useState(0);
@@ -157,13 +153,12 @@ export function WriteView({ editorRef, pageScrollRef, onWriteNextChapter, onBloc
       <div className="w-write-scroll" ref={pageScrollRef}>
         <div className="w-page" style={{ maxWidth: prefs.pageWidth, ["--w-font-size" as string]: `${prefs.fontSize}px`, ["--w-line-height" as string]: String(prefs.lineHeight) }}>
           <div className="w-page-kicker">
-            {focus ? null : <button type="button" className={`w-kicker-btn ${railOpen ? "" : "off"}`} title="书脊 ⌘\" aria-label="书脊" aria-pressed={railOpen} onClick={onToggleRail}><PanelLeft size={14} /></button>}
             <span>{place}</span>
+            <span className="w-page-count">{selectionWords ? `已选 ${selectionWords} 字` : chapter?.targetWords ? `${words} / ${chapter.targetWords} 字` : `${words} 字`}{focus ? ` · 今日 +${today}${goal ? ` / ${goal}` : ""}` : ""}</span>
             <span className="w-spacer" />
             {saveState === "error" ? <button type="button" className="w-save error" title="点击重试保存" onClick={() => void writer.flush("manual")}><span className="w-save-dot" />保存失败 · 重试</button>
               : <span className={`w-save ${saveState}`} role="status">{chapter ? `${chapterStatusLabel(chapter.status)} · ` : ""}{SAVE_LABELS[saveState]}</span>}
             <button type="button" className="w-kicker-btn" title={focus ? "退出专注 ⌘⇧F" : "专注 ⌘⇧F"} aria-label="专注模式" aria-pressed={focus} onClick={() => writer.setPrefs({ focusMode: !focus })}>{focus ? <Minimize2 size={14} /> : <Maximize2 size={14} />}</button>
-            {focus ? null : <button type="button" className={`w-kicker-btn ${marginOpen ? "" : "off"}`} title="页边 ⌘L" aria-label="页边" aria-pressed={marginOpen} onClick={onToggleMargin}><PanelRight size={14} /></button>}
           </div>
           {active.kind === "chapter" && chapter ? (
             <input aria-label="章节标题" className="w-page-title" placeholder={UNTITLED_CHAPTER} value={chapter.title} onChange={(event) => writer.updateChapter(chapter.id, { title: event.currentTarget.value })} />
@@ -214,12 +209,6 @@ export function WriteView({ editorRef, pageScrollRef, onWriteNextChapter, onBloc
         {floatingPanel}
         {continuing ? <div className="w-ai-float" role="status"><Spinner size={12} />AI 正在续写…<button type="button" onClick={() => { cancelWriterTask(abortRef.current?.signal); abortRef.current?.abort(); setContinuing(false); }}>取消</button></div> : null}
       </div>
-      <footer className="w-status">
-        <span className="num">{active.kind === "chapter" && chapter?.targetWords ? `本章 ${words} / ${chapter.targetWords} 字` : `${words} 字`}</span>
-        {selectionWords ? <span>已选 {selectionWords} 字</span> : null}
-        <span className="w-spacer" />
-        {focus ? <span className="num">今日 +{today}{goal ? ` / ${goal}` : ""}</span> : null}
-      </footer>
     </div>
   );
 }

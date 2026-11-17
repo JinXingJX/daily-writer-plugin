@@ -1,2 +1,2 @@
 /* assistant */
-.w-assist{display:flex;width:384px;flex:none;flex-direction:column;border-left:1px solid var(--line);background:var(--surface);animation:w-slide-r var(--t-panel) var(--ease)}
+.w-assist{display:flex;width:384px;flex:none;flex-direction:column;border-left:1px solid var(--line);background:var(--surface-strong);animation:w-slide-r var(--t-panel) var(--ease)}

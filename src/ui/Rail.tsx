@@ -147,14 +147,13 @@ export function Rail({ onImport, onNewProject, onPalette, onSettings, overlay = 
         <button type="button" className="w-icon-btn small" title="导入小说" aria-label="导入小说" onClick={onImport}><Import size={14} /></button>
       </div>
 
-      <div className="w-rail-rooms"><RoomSwitch /></div>
       <button type="button" className="w-rail-search" onClick={onPalette}><span>搜索、跳转、执行</span><kbd>⌘K</kbd></button>
 
       {project.chapters.length > 30 || filter ? (
         <label className="w-rail-filter">
           <Search size={13} aria-hidden="true" />
           <input aria-label="筛选章节" placeholder="跳到章节（标题或序号）" value={filter} onChange={(event) => setFilter(event.currentTarget.value)} onKeyDown={(event) => { if (event.key === "Escape") setFilter(""); }} />
-          {filter ? <button type="button" className="w-icon-btn tiny visible" aria-label="清除筛选" onClick={() => setFilter("")}><X size={12} /></button> : null}
+          {filter ? <button type="button" className="w-icon-btn tiny visible" aria-label="清除筛选" onClick={() => setFilter("")} title="清除筛选"><X size={12} /></button> : null}
         </label>
       ) : null}
 
@@ -191,7 +190,7 @@ export function Rail({ onImport, onNewProject, onPalette, onSettings, overlay = 
                     <span className="w-tree-volume-title">{row.title}</span>
                   </button>
                   <span className="w-nav-meta num">{row.count} 章 · {formatWordCount(row.words)}</span>
-                  <button type="button" className="w-icon-btn tiny" aria-label="卷操作" onClick={(event) => { const box = event.currentTarget.getBoundingClientRect(); setMenu({ kind: "volume", id: row.id, x: box.left, y: box.bottom + 4 }); }}><MoreHorizontal size={13} /></button>
+                  <button type="button" className="w-icon-btn tiny" aria-label="卷操作" onClick={(event) => { const box = event.currentTarget.getBoundingClientRect(); setMenu({ kind: "volume", id: row.id, x: box.left, y: box.bottom + 4 }); }} title="卷操作"><MoreHorizontal size={13} /></button>
                 </div>
               );
             }
@@ -202,6 +201,7 @@ export function Rail({ onImport, onNewProject, onPalette, onSettings, overlay = 
                 key={chapter.id}
                 type="button"
                 draggable
+                aria-current={activeKey === key ? "page" : undefined}
                 className={`w-tree-chapter ${activeKey === key ? "active" : ""} ${dragging === chapter.id ? "dragging" : ""} ${dropTarget === chapter.id && dragging !== chapter.id ? "drop" : ""}`}
                 style={{ top }}
                 onClick={() => writer.selectDoc({ kind: "chapter", id: chapter.id })}

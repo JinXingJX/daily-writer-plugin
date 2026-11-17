@@ -13,18 +13,18 @@
 .w-entity-list{display:flex;width:260px;flex:none;flex-direction:column;gap:2px;overflow:auto}
 .w-entity-row{display:flex;align-items:center;gap:6px;border:0;border-radius:7px;background:transparent;padding:6px 8px;font-size:13px;text-align:left}
 .w-entity-row:hover{background:var(--muted)}
-.w-entity-row.active{background:var(--surface);box-shadow:var(--shadow-raised)}
+.w-entity-row.active{background:var(--surface-strong);box-shadow:var(--shadow-raised)}
 .w-entity-detail{min-width:0;flex:1;overflow:auto;padding-right:8px;font-size:13px;line-height:1.7}
 .w-form{max-width:720px}
 .w-fact-list{margin:4px 0;padding-left:18px}
 .w-timeline{margin:0;padding-left:0;list-style:none}
-.w-timeline li{display:flex;flex-wrap:wrap;gap:6px;border-left:2px solid var(--line-strong);padding:3px 0 3px 10px}
+.w-timeline li{display:flex;flex-wrap:wrap;gap:6px;border-left:1px solid var(--line);padding:3px 0 3px 10px}
 .w-spark{position:relative;height:22px;border-radius:6px;background:var(--inset)}
 .w-spark span{position:absolute;top:4px;width:3px;height:14px;border-radius:1px;background:var(--tone);cursor:pointer}
-.w-thread-card{border:1px solid var(--line);border-radius:10px;background:var(--surface);padding:10px 12px;font-size:13px}
+.w-thread-card{border:1px solid var(--line);border-radius:10px;background:var(--surface-strong);padding:10px 12px;font-size:13px}
 .w-thread-card p{margin:4px 0}
 .w-thread-track{position:relative;height:16px;margin:6px 0;border-radius:4px;background:var(--inset)}
-.w-thread-dot{position:absolute;top:3px;width:10px;height:10px;margin-left:-5px;border:2px solid var(--surface);border-radius:50%;background:var(--accent);padding:0}
+.w-thread-dot{position:absolute;top:3px;width:10px;height:10px;margin-left:-5px;border:2px solid var(--surface-strong);border-radius:50%;background:var(--accent-text);padding:0}
 .w-thread-dot.plant{background:var(--warning)}.w-thread-dot.payoff{background:var(--success)}
 .w-search-form{display:flex;align-items:center;gap:8px}
 .w-search-hit{display:flex;flex-direction:column;gap:2px;border-bottom:1px solid var(--line);padding:6px 0;font-size:13px}

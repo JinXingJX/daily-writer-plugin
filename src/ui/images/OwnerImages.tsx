@@ -49,7 +49,7 @@ export function OwnerImages({ owner, title, material, label = "图片", roles = 
           {slots.map((slot) => (
             <div key={slot.role} className="w-image-slot">
               {slot.asset ? <button type="button" className="w-thumb-pick" title={slot.asset.caption || "查看"} onClick={() => setViewing(slot.asset?.id ?? null)}><Thumb asset={slot.asset} projectId={projectId} /></button>
-                : <button type="button" className="w-image-slot-empty" aria-label={`添加${IMAGE_ROLE_LABELS[slot.role]}`} onClick={() => addTo(slot.role)}><ImagePlus size={14} /></button>}
+                : <button type="button" className="w-image-slot-empty" aria-label={`添加${IMAGE_ROLE_LABELS[slot.role]}`} onClick={() => addTo(slot.role)} title={`添加${IMAGE_ROLE_LABELS[slot.role]}`}><ImagePlus size={14} /></button>}
               <span>{IMAGE_ROLE_LABELS[slot.role]}</span>
             </div>
           ))}

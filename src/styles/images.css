@@ -28,4 +28,4 @@
 .w-image-slot .w-thumb-pick{width:76px}
 .w-image-slot-empty{display:flex;width:76px;aspect-ratio:1;align-items:center;justify-content:center;border:1px dashed var(--line-strong);border-radius:8px;background:transparent;color:var(--text-muted);cursor:pointer}
 .w-thumb-tagged{position:relative}
-.w-thumb-tagged>span{position:absolute;right:2px;bottom:2px;left:2px;overflow:hidden;border-radius:4px;background:color-mix(in srgb,var(--surface) 88%,transparent);padding:0 4px;color:var(--text-soft);font-size:10.5px;line-height:16px;text-overflow:ellipsis;white-space:nowrap}
+.w-thumb-tagged>span{position:absolute;right:2px;bottom:2px;left:2px;overflow:hidden;border-radius:4px;background:color-mix(in srgb,var(--surface-strong) 88%,transparent);padding:0 4px;color:var(--text-soft);font-size:10.5px;line-height:16px;text-overflow:ellipsis;white-space:nowrap}

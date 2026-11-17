@@ -1,3 +1,4 @@
+import { focusPluginPanel } from "@daily/plugin-sdk";
 import { Search } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { orderedChapters, ROOT_DOCS, UNTITLED_CHAPTER } from "../domain/documents";
@@ -8,6 +9,10 @@ type Command = { id: string; label: string; hint?: string; run: () => void };
 
 export function CommandPalette({ onClose, actions }: { onClose: () => void; actions: { label: string; hint?: string; run: () => void }[] }) {
   const writer = useWriter();
+  const panelRef = useRef<HTMLDivElement>(null);
+  const closeRef = useRef(onClose);
+  closeRef.current = onClose;
+  useEffect(() => panelRef.current ? focusPluginPanel(panelRef.current, () => closeRef.current()) : undefined, []);
   const [query, setQuery] = useState("");
   const [index, setIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -34,17 +39,17 @@ export function CommandPalette({ onClose, actions }: { onClose: () => void; acti
   const run = (command: Command | undefined) => { if (!command) return; onClose(); command.run(); };
   return (
     <div className="w-modal-backdrop top" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>
-      <div className="w-palette" role="dialog" aria-label="命令面板">
-        <div className="w-palette-input"><Search size={15} /><input ref={inputRef} value={query} placeholder="跳转章节（输入标题或序号）、执行操作…" onChange={(event) => { setQuery(event.currentTarget.value); setIndex(0); }} onKeyDown={(event) => {
+      <div ref={panelRef} className="w-palette" role="dialog" aria-modal="true" aria-label="命令面板">
+        <div className="w-palette-input"><Search size={15} /><input ref={inputRef} aria-label="搜索与命令" role="combobox" aria-autocomplete="list" aria-expanded={true} aria-controls="writer-command-results" aria-activedescendant={filtered[index] ? `writer-command-${index}` : undefined} value={query} placeholder="跳转章节（输入标题或序号）、执行操作…" onChange={(event) => { setQuery(event.currentTarget.value); setIndex(0); }} onKeyDown={(event) => {
           if (isComposing(event)) return;
-          if (event.key === "Escape") onClose();
+          if (event.key === "Escape") { event.preventDefault(); event.stopPropagation(); onClose(); }
           if (event.key === "ArrowDown") { event.preventDefault(); setIndex((current) => (filtered.length ? (current + 1) % filtered.length : 0)); }
           if (event.key === "ArrowUp") { event.preventDefault(); setIndex((current) => (filtered.length ? (current - 1 + filtered.length) % filtered.length : 0)); }
           if (event.key === "Enter") { event.preventDefault(); run(filtered[index]); }
         }} /></div>
-        <div className="w-palette-list" ref={listRef}>
+        <div className="w-palette-list" id="writer-command-results" role="listbox" ref={listRef}>
           {filtered.map((command, commandIndex) => (
-            <button key={command.id} type="button" className={commandIndex === index ? "active" : ""} onMouseEnter={() => setIndex(commandIndex)} onClick={() => run(command)}>
+            <button id={`writer-command-${commandIndex}`} role="option" aria-selected={commandIndex === index} tabIndex={-1} key={command.id} type="button" className={commandIndex === index ? "active" : ""} onMouseEnter={() => setIndex(commandIndex)} onClick={() => run(command)}>
               <span>{command.label}</span>{command.hint ? <span className="w-muted">{command.hint}</span> : null}
             </button>
           ))}

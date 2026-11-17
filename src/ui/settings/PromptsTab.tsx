@@ -86,9 +86,9 @@ function QuickActionsEditor({ project }: { project: WriterProject }) {
             <span className="w-muted small">候选数</span>
             <NumberInput className="w-input tiny" min={1} max={4} fallback={2} value={action.candidates} onCommit={(value) => update(index, { candidates: value })} />
             <span className="w-spacer" />
-            <button type="button" className="w-icon-btn small" aria-label="上移" disabled={index === 0} onClick={() => move(index, -1)}><ArrowUp size={13} /></button>
-            <button type="button" className="w-icon-btn small" aria-label="下移" disabled={index === actions.length - 1} onClick={() => move(index, 1)}><ArrowDown size={13} /></button>
-            <button type="button" className="w-icon-btn small" aria-label="删除" disabled={actions.length <= 1} onClick={() => save(actions.filter((_, actionIndex) => actionIndex !== index))}><Trash2 size={13} /></button>
+            <button type="button" className="w-icon-btn small" aria-label="上移" disabled={index === 0} onClick={() => move(index, -1)} title="上移"><ArrowUp size={13} /></button>
+            <button type="button" className="w-icon-btn small" aria-label="下移" disabled={index === actions.length - 1} onClick={() => move(index, 1)} title="下移"><ArrowDown size={13} /></button>
+            <button type="button" className="w-icon-btn small" aria-label="删除" disabled={actions.length <= 1} onClick={() => save(actions.filter((_, actionIndex) => actionIndex !== index))} title="删除"><Trash2 size={13} /></button>
           </div>
           <CommitTextarea rows={2} value={action.instruction} onCommit={(instruction) => update(index, { instruction })} />
         </div>

@@ -1,5 +1,5 @@
 /* proposals & diffs */
-.w-proposal{overflow:hidden;border:1px solid var(--tone-line);border-radius:12px;background:var(--surface)}
+.w-proposal{overflow:hidden;border:1px solid var(--tone-line);border-radius:12px;background:var(--surface-strong)}
 .w-proposal.done{border-color:var(--line)}
 .w-proposal-head{display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--line);padding:8px 12px;color:var(--tone)}
 .w-proposal-head strong{min-width:0;flex:1;overflow:hidden;color:var(--text-strong);font-size:13px;text-overflow:ellipsis;white-space:nowrap}
@@ -24,7 +24,7 @@
 .w-diff-hunk{display:flex;gap:6px;padding:2px 10px 2px 6px}
 .w-diff-hunk.rejected{opacity:.45}
 .w-hunk-body{min-width:0;flex:1}
-.w-hunk-toggle{display:grid;width:16px;height:16px;flex:none;place-items:center;margin-top:4px;border:1px solid var(--line-active);border-radius:4px;background:var(--surface);padding:0;color:#fff}
+.w-hunk-toggle{display:grid;width:16px;height:16px;flex:none;place-items:center;margin-top:4px;border:1px solid var(--line-active);border-radius:4px;background:var(--surface-strong);padding:0;color:var(--primary-contrast)}
 .w-hunk-toggle.on{border-color:var(--tone);background:var(--tone)}
 .w-diff-line.del{background:var(--del-bg);color:var(--del-text);text-decoration:line-through}
 .w-diff-line.ins{background:var(--add-bg);color:var(--add-text)}

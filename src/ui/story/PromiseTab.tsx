@@ -48,7 +48,7 @@ export function PromiseTab() {
           <p className="w-muted">写清循环、限制和地位锚：限制留下行动的动机，地位越高对手和压力也越大。</p>
           {story.powers.map((power) => (
             <article key={power.id} className="w-story-item">
-              <div className="w-row"><input className="w-input grow" value={power.name} onChange={(event) => setPower(power.id, { name: event.currentTarget.value })} /><button type="button" className="w-icon-btn small" aria-label="删除" onClick={() => void removePower(power)}><Trash2 size={12} /></button></div>
+              <div className="w-row"><input className="w-input grow" value={power.name} onChange={(event) => setPower(power.id, { name: event.currentTarget.value })} /><button type="button" className="w-icon-btn small" aria-label="删除" onClick={() => void removePower(power)} title="删除"><Trash2 size={12} /></button></div>
               <OwnerImages owner={`power:${power.id}`} title={`「${power.name}」配图`} material={`${power.name}：触发 ${power.trigger}；效果 ${power.reward}`} />
               <TextField label="使用/获取条件" value={power.trigger} onCommit={(value) => setPower(power.id, { trigger: value })} />
               <TextField label="收获" value={power.reward} onCommit={(value) => setPower(power.id, { reward: value })} />

@@ -42,7 +42,7 @@ export function NewProjectDialog({ onClose }: { onClose: () => void }) {
     </>}>
       <section className="w-form">
         <div className="w-inspector-grid">
-          <Field label="作品名称"><input className="w-input" value={title} placeholder="未命名长篇" autoFocus onChange={(event) => setTitle(event.currentTarget.value)} /></Field>
+          <Field label="作品名称"><input className="w-input" value={title} placeholder="未命名长篇" data-autofocus onChange={(event) => setTitle(event.currentTarget.value)} /></Field>
           <Field label="类型"><input className="w-input" value={genre} placeholder="例如：悬疑、仙侠、都市" onChange={(event) => setGenre(event.currentTarget.value)} /></Field>
         </div>
         <Field label="一句话想法（可选，会写进大纲）">

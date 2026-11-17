@@ -55,7 +55,7 @@ export function ThreadsTab({ notebook, onOpenChapter }: Pick<NotebookApi, "noteb
               <select className="w-select small" value={thread.tier} onChange={(event) => edit(thread, { tier: event.currentTarget.value as StoryThread["tier"] })}>{THREAD_TIERS.map((item) => <option key={item} value={item}>{THREAD_TIER_LABELS[item]}</option>)}</select>
               <select className="w-select small" value={thread.status} onChange={(event) => edit(thread, { status: event.currentTarget.value as StoryThread["status"], progress: event.currentTarget.value === "paid" ? 1 : thread.progress })}><option value="open">未兑现</option><option value="paid">已兑现</option><option value="abandoned">放弃</option></select>
               <InspireButton className="w-icon-btn small" label="" title="这条线索可以怎么兑现" options={() => ({ target: "thread", focus: `[${thread.id}] ${thread.title}：${thread.description}${thread.plan ? `\n作者的计划：${thread.plan}` : ""}` })} />
-              <button type="button" className="w-icon-btn small" aria-label="删除" onClick={() => void remove(thread)}><Trash2 size={12} /></button>
+              <button type="button" className="w-icon-btn small" aria-label="删除" onClick={() => void remove(thread)} title="删除"><Trash2 size={12} /></button>
             </div>
             <div className="w-row small">
               {thread.plantedAt >= 0 ? <button type="button" className="w-link" onClick={() => onOpenChapter(memory?.orderedIds[thread.plantedAt] ?? "")}>{chapterLabel(thread.plantedAt)}引入</button> : <span className="w-muted">未关联章节</span>}
@@ -71,7 +71,7 @@ export function ThreadsTab({ notebook, onOpenChapter }: Pick<NotebookApi, "noteb
             {thread.kind !== "foreshadow" ? (
               <div className="w-row small">
                 <span className="w-muted">接棒：</span>
-                {thread.successorIds.map((id) => <span key={id} className="w-pill">{titleOf(id)}<button type="button" className="w-link" aria-label="移除" onClick={() => edit(thread, { successorIds: thread.successorIds.filter((item) => item !== id) })}>×</button></span>)}
+                {thread.successorIds.map((id) => <span key={id} className="w-pill">{titleOf(id)}<button type="button" className="w-link" aria-label="移除" onClick={() => edit(thread, { successorIds: thread.successorIds.filter((item) => item !== id) })} title="移除">×</button></span>)}
                 <select className="w-select small" value="" onChange={(event) => { if (event.currentTarget.value) edit(thread, { successorIds: [...thread.successorIds, event.currentTarget.value] }); }}>
                   <option value="">添加接棒的期待…</option>
                   {threads.filter((other) => other.id !== thread.id && other.status === "open" && !thread.successorIds.includes(other.id)).map((other) => <option key={other.id} value={other.id}>{other.title}</option>)}

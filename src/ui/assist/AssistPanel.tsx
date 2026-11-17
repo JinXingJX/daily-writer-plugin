@@ -1,5 +1,5 @@
 import { viewIsVisible } from "../../view";
-import { Plus } from "lucide-react";
+import { Plus, X } from "lucide-react";
 import { createPortal } from "react-dom";
 import { dailyHost, localizeHostText } from "../../host";
 import { observeTasks, taskIsActive, type TaskSnapshot } from "@daily/plugin-sdk";
@@ -30,6 +30,7 @@ import { Message, proposalOf } from "./Message";
 let handledMessageNonce = 0;
 
 type Props = {
+  onClose: () => void;
   selection: EditorSelection;
   editorSelection: () => EditorSelection;
   onReveal: (key: string, quote?: string) => void;
@@ -50,7 +51,7 @@ type Props = {
 };
 
 /** The margin: AI notes on the page, the conversation, and the chapter's own details, above one composer. */
-export function AssistPanel({ selection, editorSelection, onReveal, overlay = false, hidden = false, room, planHost, tab, onTab, notesApi, editorRef, pageScrollRef, activeNote, onActiveNote, alignNotes, selectionPanel }: Props) {
+export function AssistPanel({ onClose, selection, editorSelection, onReveal, overlay = false, hidden = false, room, planHost, tab, onTab, notesApi, editorRef, pageScrollRef, activeNote, onActiveNote, alignNotes, selectionPanel }: Props) {
   const writer = useWriter();
   const { project, memory, active } = writer;
   // `null` is a new conversation; the host session is created on the first message.
@@ -67,6 +68,8 @@ export function AssistPanel({ selection, editorSelection, onReveal, overlay = fa
   const [sampleCount, setSampleCount] = useState(0);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const threadRef = useRef<HTMLDivElement>(null);
+  const followBottom = useRef(true);
   const [task, setTask] = useState<TaskSnapshot | null>(null);
   const sessionRef = useRef(session);
   sessionRef.current = session;
@@ -113,7 +116,7 @@ export function AssistPanel({ selection, editorSelection, onReveal, overlay = fa
     void listSamples(projectId).then((samples) => setSampleCount(samples.length)).catch(() => setSampleCount(0));
   }, [projectId]);
 
-  useEffect(() => { bottomRef.current?.scrollIntoView({ block: "end" }); }, [session?.entries.length, events.length, running, tab]);
+  useEffect(() => { if (followBottom.current) bottomRef.current?.scrollIntoView({ block: "end" }); }, [session?.entries.length, events.length, running, tab]);
 
   /** Re-reads the session (and the conversation list) after the host or Writer changed it. */
   const refresh = useCallback(async (sessionId: string) => {
@@ -282,12 +285,12 @@ export function AssistPanel({ selection, editorSelection, onReveal, overlay = fa
           {session.agentTools.map((agent) => (
             <span key={agent.id} className="w-pill tone" title={agent.description || agent.instructions}>
               {agent.name}
-              <button type="button" className="w-link" aria-label={`删除子 agent ${agent.name}`} disabled={busy} onClick={async () => { await removeAgentTool(session.id, agent.id); await refresh(session.id); }}>×</button>
+              <button type="button" className="w-link" aria-label={`删除子 agent ${agent.name}`} disabled={busy} onClick={async () => { await removeAgentTool(session.id, agent.id); await refresh(session.id); }} title={`删除子 agent ${agent.name}`}>×</button>
             </span>
           ))}
         </div>
       ) : null}
-      <div className="w-thread">
+      <div className="w-thread" ref={threadRef} onScroll={() => { const el = threadRef.current; if (el) followBottom.current = el.scrollHeight - el.scrollTop - el.clientHeight < 80; }}>
         {orphanRuns.length && !pending ? orphanRuns.map((run) => (
           <div key={run.runId} className="w-callout">
             <span>有一个未完成的 AI 任务：{run.instruction.slice(0, 40)}</span>
@@ -326,7 +329,8 @@ export function AssistPanel({ selection, editorSelection, onReveal, overlay = fa
     <aside className={`w-assist ${overlay ? "overlay" : ""} ${studio ? "studio" : ""} ${hidden ? "w-hidden" : ""}`} aria-label={studio ? "对谈" : "页边"}>
       {studio ? null : (
         <div className="w-margin-tabs" role="tablist" aria-label="页边内容">
-          {tabs.map((item) => <button key={item.value} type="button" role="tab" aria-selected={showTab === item.value} className={showTab === item.value ? "active" : ""} onClick={() => onTab(item.value)}>{item.label}</button>)}
+          {tabs.map((item) => <button key={item.value} type="button" role="tab" tabIndex={showTab === item.value ? 0 : -1} onKeyDown={event => { const index = tabs.indexOf(item); const next = event.key === "ArrowRight" ? (index + 1) % tabs.length : event.key === "ArrowLeft" ? (index + tabs.length - 1) % tabs.length : event.key === "Home" ? 0 : event.key === "End" ? tabs.length - 1 : -1; if (next < 0) return; event.preventDefault(); onTab(tabs[next].value); event.currentTarget.parentElement?.querySelectorAll<HTMLButtonElement>('[role="tab"]')[next]?.focus(); }} aria-selected={showTab === item.value} className={showTab === item.value ? "active" : ""} onClick={() => onTab(item.value)}>{item.label}</button>)}
+          <button type="button" className="w-icon-btn" title="关闭页边 ⌘I" aria-label="关闭页边" onClick={onClose}><X size={16} /></button>
         </div>
       )}
       <div className="w-margin-body">
@@ -341,7 +345,7 @@ export function AssistPanel({ selection, editorSelection, onReveal, overlay = fa
         {refining ? <div className="w-composer-note">正在改进「{refining.title}」<button type="button" className="w-link" onClick={() => setRefining(null)}>取消</button></div> : null}
         {mode !== "agent" ? <div className="w-composer-note">{mode === "qa" ? "问全书" : "整理设定稿"}<button type="button" className="w-link" onClick={() => setMode("agent")}>退出</button></div> : null}
         {showTab === "chat" && hasSelection && room === "write" && mode === "agent" ? <div className="w-composer-note">针对选中的 {selection.text.length} 字<button type="button" className="w-link" onClick={() => onTab("notes")}>快捷改写</button></div> : null}
-        <Composer inputRef={inputRef} value={input} onChange={setInput} running={busy} mode={mode} scope={scope} onScope={setScopeOverride} hasSelection={hasSelection} inChapter={inChapter} reading={reading} onCommand={applyCommand} onSubmit={() => void send(input)} onStop={stop}
+        <Composer inputRef={inputRef} value={input} onChange={setInput} running={busy} mode={mode} scope={scope} onScope={setScopeOverride} hasSelection={hasSelection} inChapter={inChapter} reading={reading} onCommand={applyCommand} onSubmit={() => { followBottom.current = true; void send(input); }} onStop={stop}
           placeholder={mode === "organize" ? "把设定稿粘贴到这里（可以很长），可在末尾写上整理要求，然后发送" : mode === "qa" ? "问关于全书的问题，答案带章节出处" : refining ? "说说哪里需要调整，例如：再短一点，保留第二段" : "问一句，或让它动笔"} />
       </div>
       {studio && planHost ? createPortal(<StudioPlan session={session} running={busy} events={events} waiting={Boolean(pending)} onSend={(text) => void send(text, "agent")} />, planHost) : null}

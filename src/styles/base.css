@@ -1,44 +1,15 @@
-:host{
-  color-scheme:light;
-  /* Desk, margin and paper. The manuscript is ink on paper; everything else recedes. */
-  --bg:#edeae2;--panel:#f5f2ea;--surface:#fffdf8;--muted:#e2ded3;--inset:#ddd8cc;--paper:#fbf9f3;
-  --line:rgba(28,27,25,.12);--line-strong:rgba(28,27,25,.2);--line-active:rgba(28,27,25,.36);
-  --text:#1c1b19;--text-strong:#141311;--text-soft:#4a4740;--text-muted:#68645b;
-  --primary:#1c1b19;--primary-hover:#33312c;--primary-contrast:#fbf9f3;
-  /* Vermilion belongs to the AI: words it proposes that are not yet the author's. Accepted text turns to ink. */
-  --tone:#b8321f;--tone-soft:#f7e4dd;--tone-line:#e6bbae;--tone-strong:#9a2715;
-  /* Stone blue: links into memory, chapters and selection. */
-  --accent:#24566b;--accent-soft:#d5e3e8;
-  --danger:#8a1c10;--danger-soft:#f3dcd5;--danger-line:#dcae9f;
-  --success:#2f6b4f;--success-soft:#e1ece3;
-  --warning:#7f5400;--warning-soft:#f2e8d2;--warning-line:#dcc99c;
-  --del-bg:transparent;--del-text:#68645b;--add-bg:#f7e4dd;--add-text:#b8321f;
-  --shadow-raised:0 1px 2px rgba(28,27,25,.07),0 0 0 1px rgba(28,27,25,.07);
-  --shadow-pop:0 18px 48px rgba(28,27,25,.16),0 0 0 1px rgba(28,27,25,.08);
-  --focus:0 0 0 2px var(--paper),0 0 0 4px var(--text-strong);
-  --sans:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Noto Sans SC","Segoe UI",sans-serif;
-  --serif:"Noto Serif SC","Songti SC","Source Han Serif SC",ui-serif,Georgia,serif;
-  --mono:ui-monospace,"SF Mono","JetBrains Mono",Menlo,monospace;
-  /* Motion: one curve; quick for controls, base for popovers, panel for panes and drawers. */
-  --ease:cubic-bezier(.2,.8,.2,1);--t-quick:140ms;--t-base:200ms;--t-panel:280ms;
-  --e-character:#24566b;--e-location:#2f6b4f;--e-faction:#8a1c10;--e-item:#7f5400;--e-skill:#3b4e8c;--e-term:#68645b;
-  font-family:var(--sans);
-}
-:host([data-daily-theme="dark"]){
-  color-scheme:dark;
-  --bg:#1a1916;--panel:#1f1e1a;--surface:#26241f;--muted:#2c2a26;--inset:#111110;--paper:#141311;
-  --line:rgba(255,250,235,.09);--line-strong:rgba(255,250,235,.17);--line-active:rgba(255,250,235,.3);
-  --text:#e4dfd2;--text-strong:#f3eee1;--text-soft:#b9b3a5;--text-muted:#8f8a7e;
-  --primary:#f3eee1;--primary-hover:#ffffff;--primary-contrast:#141311;
-  --tone:#e98a72;--tone-soft:rgba(233,138,114,.14);--tone-line:rgba(233,138,114,.36);--tone-strong:#f2a893;
-  --accent:#8fbfd0;--accent-soft:rgba(143,191,208,.2);
-  --danger:#ff8a7e;--danger-soft:rgba(229,83,74,.16);--danger-line:rgba(229,83,74,.4);
-  --success:#7fc9a2;--success-soft:rgba(46,154,100,.16);
-  --warning:#e6b566;--warning-soft:rgba(232,137,12,.14);--warning-line:rgba(232,137,12,.4);
-  --del-bg:transparent;--del-text:#8f8a7e;--add-bg:rgba(233,138,114,.14);--add-text:#e98a72;
-  --shadow-raised:0 1px 2px rgba(0,0,0,.4),0 0 0 1px rgba(255,255,255,.07);
-  --shadow-pop:0 18px 48px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.08);
-  --e-character:#8fbfd0;--e-location:#73d3a0;--e-faction:#ff8a7e;--e-item:#f2b366;--e-skill:#8ea2ff;--e-term:#b6b5bd;
+/* Daily tokens are installed by the view before these domain styles. */
+:host {
+  --bg: var(--app-main-bg); --panel: var(--app-sidebar-bg); --paper: var(--app-main-bg);
+  --muted: var(--surface-muted); --inset: var(--surface-inset);
+  --tone: var(--accent-text); --tone-soft: var(--accent-soft); --tone-line: var(--accent-line); --tone-strong: var(--accent-text);
+  --del-bg: transparent; --del-text: var(--text-muted); --add-bg: var(--accent-soft); --add-text: var(--accent-text);
+  --shadow-pop: var(--shadow-popover); --focus: var(--focus-ring);
+  --sans: var(--font-sans); --serif: var(--font-serif); --mono: var(--font-mono);
+  --ease: var(--ease-out); --t-quick: var(--duration-fast); --t-base: var(--duration-med); --t-panel: var(--duration-med);
+  --e-character: var(--text-strong); --e-location: var(--text-soft); --e-faction: var(--text-strong);
+  --e-item: var(--text-soft); --e-skill: var(--text-strong); --e-term: var(--text-muted);
+  font-family: var(--font-sans);
 }
 *{box-sizing:border-box}
 #root{width:100%;height:100%;margin:0}

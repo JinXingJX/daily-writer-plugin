@@ -47,7 +47,7 @@ export function AtlasTimeline({ project, axis, events, cursor, onCursor, span, o
   return (
     <div className="w-atlas-timeline" role="group" aria-label="时间轴">
       <div className="w-atlas-time-head">
-        <button type="button" className="w-icon-btn small" aria-label={playing ? "暂停" : "播放"} onClick={() => { if (!playing && cursor >= total - 1) onCursor(0); onPlaying(!playing); }}>{playing ? <Pause size={13} /> : <Play size={13} />}</button>
+        <button type="button" className="w-icon-btn small" aria-label={playing ? "暂停" : "播放"} onClick={() => { if (!playing && cursor >= total - 1) onCursor(0); onPlaying(!playing); }} title={playing ? "暂停" : "播放"}>{playing ? <Pause size={13} /> : <Play size={13} />}</button>
         <strong>{stop.label}</strong>
         {stop.kind === "future" ? <span className="w-pill">后续</span> : stop.kind === "past" ? <span className="w-pill">前史</span> : null}
         {time ? <span className="w-muted">{time}</span> : null}

@@ -9,10 +9,10 @@
 .w-save.error{color:var(--danger)}.w-save.error .w-save-dot{background:var(--danger)}
 button.w-save{height:28px;border:1px solid var(--danger-line);border-radius:999px;background:var(--danger-soft);padding:0 10px;animation:w-rise var(--t-base) var(--ease)}
 button.w-save:hover{border-color:var(--danger)}
-.w-kbd{display:inline-block;flex:none;border:1px solid var(--line-strong);border-radius:4px;background:var(--surface);padding:0 4px;color:var(--text-muted);font-family:var(--mono);font-size:10.5px;font-weight:400;line-height:16px}
+.w-kbd{display:inline-block;flex:none;border:1px solid var(--line-strong);border-radius:4px;background:var(--surface-strong);padding:0 4px;color:var(--text-muted);font-family:var(--mono);font-size:10.5px;font-weight:400;line-height:16px}
 /* focus: panes leave, the bar recedes until hovered */
 .w-app.focus .w-app.focus .w-topbar:hover,.w-app.focus .w-topbar:focus-within{opacity:1}
-.w-drawer-backdrop{position:fixed;inset:0;z-index:29;background:rgba(20,20,24,.24);animation:w-fade var(--t-base)}
+.w-drawer-backdrop{position:fixed;inset:0;z-index:29;background:var(--overlay);animation:w-fade var(--t-base)}
 /* welcome */
 .w-welcome{display:grid;min-height:100cqh;place-items:center;padding:24px}
 .w-welcome section{width:min(560px,100%);animation:w-rise var(--t-panel) var(--ease)}

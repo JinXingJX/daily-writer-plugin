@@ -1,7 +1,7 @@
 /* story view, health, plan review warnings, block doctor */
 .w-health-list{display:flex;flex-direction:column;gap:6px;margin:6px 0;padding:0;list-style:none;font-size:13px}
-.w-health-list li{border-left:3px solid var(--line-strong);padding:2px 0 2px 8px;color:var(--text-soft)}
-.w-health-list li.warning{border-left-color:var(--warning)}
+.w-health-list li{border-left:1px solid var(--line);padding:2px 0 2px 8px;color:var(--text-soft)}
+.w-health-list li.warning{border-left-color:var(--line)}
 .w-health-list li b{color:var(--text)}
 .w-threshold-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px;margin:8px 0;font-size:12px}
 .w-threshold-grid label{display:flex;flex-direction:column;gap:4px;color:var(--text-soft)}
@@ -12,7 +12,7 @@
 .w-timeline-bar.mystery{background:var(--warning-soft);color:var(--warning)}
 .w-timeline-bar.paid{opacity:.55}
 .w-story-field{display:flex;flex-direction:column;gap:4px;margin:6px 0;font-size:12px;color:var(--text-soft)}
-.w-story-field textarea{width:100%;border:1px solid var(--line);border-radius:6px;background:var(--surface);padding:6px 8px;color:var(--text);font:inherit;font-size:13px;resize:vertical}
+.w-story-field textarea{width:100%;border:1px solid var(--line);border-radius:6px;background:var(--surface-strong);padding:6px 8px;color:var(--text);font:inherit;font-size:13px;resize:vertical}
 .w-story-item{border-top:1px solid var(--line);padding:10px 0}
 .w-story-item:first-of-type{border-top:0}
 .w-thread-card.paid,.w-thread-card.abandoned{opacity:.6}

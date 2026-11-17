@@ -75,9 +75,9 @@ export function PlanReview({ plan: initial, note: agentNote, warnings = [], busy
                 <button type="button" className="w-link" onClick={() => setOpen(open === scene.id ? null : scene.id)}><b>场景 {index + 1}</b>{sceneWarnings.length ? <AlertTriangle size={12} className="w-warn-icon" /> : null}</button>
                 <input className="w-input grow" value={scene.title} onChange={(event) => updateScene(index, { title: event.currentTarget.value })} />
                 <input className="w-input narrow" type="number" min={0} step={100} value={scene.words} title="字数" onChange={(event) => updateScene(index, { words: Math.max(0, Number(event.currentTarget.value) || 0) })} />
-                <button type="button" className="w-icon-btn small" aria-label="上移" disabled={index === 0} onClick={() => moveScene(index, -1)}><ArrowUp size={13} /></button>
-                <button type="button" className="w-icon-btn small" aria-label="下移" disabled={index === plan.scenes.length - 1} onClick={() => moveScene(index, 1)}><ArrowDown size={13} /></button>
-                <button type="button" className="w-icon-btn small" aria-label="删除场景" disabled={plan.scenes.length <= 1} onClick={() => setPlan({ ...plan, scenes: plan.scenes.filter((_, sceneIndex) => sceneIndex !== index) })}><Trash2 size={13} /></button>
+                <button type="button" className="w-icon-btn small" aria-label="上移" disabled={index === 0} onClick={() => moveScene(index, -1)} title="上移"><ArrowUp size={13} /></button>
+                <button type="button" className="w-icon-btn small" aria-label="下移" disabled={index === plan.scenes.length - 1} onClick={() => moveScene(index, 1)} title="下移"><ArrowDown size={13} /></button>
+                <button type="button" className="w-icon-btn small" aria-label="删除场景" disabled={plan.scenes.length <= 1} onClick={() => setPlan({ ...plan, scenes: plan.scenes.filter((_, sceneIndex) => sceneIndex !== index) })} title="删除场景"><Trash2 size={13} /></button>
               </div>
               {sceneWarnings.length ? <ul className="w-plan-warnings">{sceneWarnings.map((warning, item) => <li key={item}>{warning.message}</li>)}</ul> : null}
               {open === scene.id ? (

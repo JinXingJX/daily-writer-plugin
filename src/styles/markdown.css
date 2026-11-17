@@ -5,9 +5,9 @@
 .w-markdown h1,.w-markdown h2,.w-markdown h3{color:var(--text-strong);line-height:1.35;font-size:1.08em}
 .w-markdown p{margin:.5em 0}
 .w-markdown ul,.w-markdown ol{padding-left:1.3em;margin:.4em 0}
-.w-markdown blockquote{margin:.6em 0;border-left:3px solid var(--line-strong);padding-left:10px;color:var(--text-soft)}
+.w-markdown blockquote{margin:.6em 0;border-left:1px solid var(--line);padding-left:10px;color:var(--text-soft)}
 .w-markdown code{border-radius:4px;background:var(--muted);padding:1px 4px}
-.w-markdown a{color:var(--accent)}
+.w-markdown a{color:var(--accent-text)}
 .w-markdown h4,.w-markdown h5,.w-markdown h6{color:var(--text-strong);font-size:1em}
 .w-markdown pre{overflow:auto;border-radius:8px;background:var(--muted);padding:8px 10px;font-size:.92em;line-height:1.55}
 .w-markdown pre code{background:transparent;padding:0}

@@ -101,11 +101,11 @@ export function ReaderTab({ notebook, update, onOpenChapter }: NotebookApi & { o
       <div className="w-row w-reader-bar">
         <BookOpen size={14} className="w-tone" />
         <span>读者读完</span>
-        <button type="button" className="w-icon-btn small" aria-label="上一章" disabled={index <= 0} onClick={() => step(-1)}><ChevronLeft size={13} /></button>
+        <button type="button" className="w-icon-btn small" aria-label="上一章" disabled={index <= 0} onClick={() => step(-1)} title="上一章"><ChevronLeft size={13} /></button>
         <select className="w-select small" value={chapterId} onChange={(event) => setChapterId(event.currentTarget.value)}>
           {written.map((item) => <option key={item.chapter.id} value={item.chapter.id}>{chapterLabel(item.position)} {previewText(item.chapter.title, 16)}</option>)}
         </select>
-        <button type="button" className="w-icon-btn small" aria-label="下一章" disabled={index < 0 || index >= written.length - 1} onClick={() => step(1)}><ChevronRight size={13} /></button>
+        <button type="button" className="w-icon-btn small" aria-label="下一章" disabled={index < 0 || index >= written.length - 1} onClick={() => step(1)} title="下一章"><ChevronRight size={13} /></button>
         <span>之后</span>
         <span className="w-spacer" />
         {missing > 0 ? <span className="w-pill warn">{missing} 章还没有记忆，读者记得的前情可能不全</span> : null}

@@ -208,9 +208,9 @@ function TimelineEditor({ atlas, axis, cursor, selection, onSelect, onCursor, mu
   });
   const renderEvent = (event: AtlasEvent, index: number) => (
     <div key={event.id} className="w-atlas-stop-event">
-      <button type="button" className="w-icon-btn small" aria-label="移到上一个时间点" disabled={index <= 0} onClick={() => moveEvent(event, index - 1)}><ArrowLeft size={12} /></button>
+      <button type="button" className="w-icon-btn small" aria-label="移到上一个时间点" disabled={index <= 0} onClick={() => moveEvent(event, index - 1)} title="移到上一个时间点"><ArrowLeft size={12} /></button>
       <button type="button" className={`title ${selection?.id === event.id ? "active" : ""}`} onClick={() => onSelect({ type: "event", id: event.id })}>{event.title}</button>
-      <button type="button" className="w-icon-btn small" aria-label="移到下一个时间点" disabled={index < 0 || index >= axis.stops.length - 1} onClick={() => moveEvent(event, index + 1)}><ArrowRight size={12} /></button>
+      <button type="button" className="w-icon-btn small" aria-label="移到下一个时间点" disabled={index < 0 || index >= axis.stops.length - 1} onClick={() => moveEvent(event, index + 1)} title="移到下一个时间点"><ArrowRight size={12} /></button>
     </div>
   );
   return (
@@ -231,9 +231,9 @@ function TimelineEditor({ atlas, axis, cursor, selection, onSelect, onCursor, mu
               <div className="w-atlas-stop-head">
                 <button type="button" className="jump" title="跳到这一刻" onClick={() => onCursor(index)}>{stop.kind === "chapter" ? stop.label : `${stop.kind === "past" ? "前史" : "后续"} · ${stop.label}`}</button>
                 {moment ? <>
-                  <button type="button" className="w-icon-btn small" aria-label="提前" disabled={order <= 0} onClick={() => swap(moment, -1)}><ArrowUp size={12} /></button>
-                  <button type="button" className="w-icon-btn small" aria-label="推后" disabled={order >= siblings.length - 1} onClick={() => swap(moment, 1)}><ArrowDown size={12} /></button>
-                  <button type="button" className="w-icon-btn small" aria-label="删除时间节点" onClick={() => onRemove("moment", moment.id)}><Trash2 size={12} /></button>
+                  <button type="button" className="w-icon-btn small" aria-label="提前" disabled={order <= 0} onClick={() => swap(moment, -1)} title="提前"><ArrowUp size={12} /></button>
+                  <button type="button" className="w-icon-btn small" aria-label="推后" disabled={order >= siblings.length - 1} onClick={() => swap(moment, 1)} title="推后"><ArrowDown size={12} /></button>
+                  <button type="button" className="w-icon-btn small" aria-label="删除时间节点" onClick={() => onRemove("moment", moment.id)} title="删除时间节点"><Trash2 size={12} /></button>
                 </> : null}
               </div>
               {moment ? <CommitInput label="时间节点名" value={moment.label} placeholder="名称，例如：百年前·天京之变" onCommit={(label) => mutate((draft) => { const target = draft.moments.find((item) => item.id === moment.id); if (target) Object.assign(target, { label, origin: "user" }); })} /> : null}
@@ -275,7 +275,7 @@ function RegionDetail({ region, ...props }: SideProps & { region: AtlasRegion })
         {changes.map((item) => (
           <div key={item.id} className="w-form">
             <TimeSelect axis={axis} value={item} label="易主时间" onChange={(time) => { if (time !== "new") editChange(item.id, time); }} />
-            <div className="w-row"><CommitInput label="新的控制者" value={item.owner} placeholder="新的控制者" onCommit={(owner) => editChange(item.id, { owner })} /><button type="button" className="w-icon-btn small" aria-label="删除这次变更" onClick={() => onRemove("territory", item.id)}><Trash2 size={12} /></button></div>
+            <div className="w-row"><CommitInput label="新的控制者" value={item.owner} placeholder="新的控制者" onCommit={(owner) => editChange(item.id, { owner })} /><button type="button" className="w-icon-btn small" aria-label="删除这次变更" onClick={() => onRemove("territory", item.id)} title="删除这次变更"><Trash2 size={12} /></button></div>
           </div>
         ))}
       </section>
@@ -287,7 +287,7 @@ function RegionDetail({ region, ...props }: SideProps & { region: AtlasRegion })
             <div className="w-row">
               <select className="w-select" aria-label="变成" value={item.terrain} onChange={(event) => editTerrain(item.id, { terrain: event.currentTarget.value as Terrain })}>{Object.entries(TERRAIN_LABELS).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select>
               <CommitInput label="怎么变的" value={item.note} placeholder="如：大火焚林" onCommit={(note) => editTerrain(item.id, { note })} />
-              <button type="button" className="w-icon-btn small" aria-label="删除这次地形变化" onClick={() => onRemove("terrain", item.id)}><Trash2 size={12} /></button>
+              <button type="button" className="w-icon-btn small" aria-label="删除这次地形变化" onClick={() => onRemove("terrain", item.id)} title="删除这次地形变化"><Trash2 size={12} /></button>
             </div>
           </div>
         ))}
@@ -319,7 +319,7 @@ function BlockSection({ region, ...props }: SideProps & { region: AtlasRegion })
         <button type="button" className="w-btn small" disabled={busy} title={overview.url ? "参考总图和底图" : "这张图还没有总图，会只按线稿画"} onClick={() => onPaintBlock(region.id, block?.edge ?? edge)}><Brush size={12} />{block ? "重画块图" : "画块图"}</button>
         {block ? <button type="button" className="w-btn small" onClick={() => change({ hidden: !block.hidden })}>{block.hidden ? <Eye size={12} /> : <EyeOff size={12} />}{block.hidden ? "显示" : "隐藏"}</button> : null}
         {block?.versions.length ? <button type="button" className="w-btn small" onClick={() => change({ assetId: block.versions[block.versions.length - 1], versions: block.versions.slice(0, -1) })}><Undo2 size={12} />换回上一版</button> : null}
-        {block ? <button type="button" className="w-icon-btn small" aria-label="删除块图" onClick={() => mutate((draft) => { draft.blocks = draft.blocks.filter((item) => item.id !== block.id); })}><Trash2 size={12} /></button> : null}
+        {block ? <button type="button" className="w-icon-btn small" aria-label="删除块图" onClick={() => mutate((draft) => { draft.blocks = draft.blocks.filter((item) => item.id !== block.id); })} title="删除块图"><Trash2 size={12} /></button> : null}
       </div>
     </section>
   );
@@ -492,7 +492,7 @@ function ItemDetail({ item, ...props }: SideProps & { item: AtlasItem }) {
             <div className="w-row">
               <CommitInput label="持有人" value={stop.holder} placeholder="持有人（可空）" onCommit={(holder) => editStop(index, { holder })} />
               <select className="w-select" aria-label="所在地点" value={stop.placeId ?? ""} onChange={(event) => editStop(index, { placeId: event.currentTarget.value || null })}><option value="">随持有人</option>{atlas.places.map((place) => <option key={place.id} value={place.id}>{place.name}</option>)}</select>
-              <button type="button" className="w-icon-btn small" aria-label="删除这次去向" onClick={() => change({ stops: item.stops.filter((_, position) => position !== index) })}><Trash2 size={12} /></button>
+              <button type="button" className="w-icon-btn small" aria-label="删除这次去向" onClick={() => change({ stops: item.stops.filter((_, position) => position !== index) })} title="删除这次去向"><Trash2 size={12} /></button>
             </div>
           </div>
         ))}

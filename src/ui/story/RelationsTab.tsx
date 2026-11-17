@@ -40,7 +40,7 @@ export function RelationsTab() {
         const path = points.map((point, index) => `${index ? "L" : "M"}${points.length > 1 ? (index / (points.length - 1)) * width : width / 2},${40 - point.level * 4}`).join(" ");
         return (
           <article key={track.id} className="w-story-item">
-            <div className="w-row"><b>{track.a} × {track.b}</b><span className="w-pill">{track.social[track.social.length - 1]?.status ?? "名分未定"}</span><span className="w-pill tone">亲近 {points[points.length - 1]?.level ?? "?"}/10</span><span className="w-spacer" /><button type="button" className="w-icon-btn small" aria-label="删除" onClick={() => void remove(track)}><Trash2 size={12} /></button></div>
+            <div className="w-row"><b>{track.a} × {track.b}</b><span className="w-pill">{track.social[track.social.length - 1]?.status ?? "名分未定"}</span><span className="w-pill tone">亲近 {points[points.length - 1]?.level ?? "?"}/10</span><span className="w-spacer" /><button type="button" className="w-icon-btn small" aria-label="删除" onClick={() => void remove(track)} title="删除"><Trash2 size={12} /></button></div>
             {points.length ? <svg className="w-relation-chart" viewBox={`-4 -4 ${width + 8} 48`} role="img" aria-label="亲近程度变化"><path d={path} /></svg> : null}
             <ul className="w-fact-list">
               {[...track.social.map((point) => ({ at: order(point.chapterId), text: `${label(point.chapterId)} 名分 → ${point.status}` })), ...points.map((point) => ({ at: order(point.chapterId), text: `${label(point.chapterId)} 亲近 ${point.level}${point.event ? `：${point.event}` : ""}${point.origin === "extracted" ? "（正文识别）" : ""}` }))].sort((left, right) => left.at - right.at).map((item, index) => <li key={index}>{item.text}</li>)}

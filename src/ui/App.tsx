@@ -1,5 +1,6 @@
+import { focusPluginPanel } from "@daily/plugin-sdk";
 import { onViewKeyDown } from "../view";
-import { LoaderCircle, PanelRight, PenLine, Plus, Import, X } from "lucide-react";
+import { PanelLeft, PanelRight, Settings, PenLine, Plus, Import, X } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { resolveAnchor } from "../domain/anchors";
 import { docRefFromKey, orderedChapters, readDoc } from "../domain/documents";
@@ -45,6 +46,8 @@ const EMPTY_SELECTION: EditorSelection = { from: 0, to: 0, text: "" };
 
 function Shell() {
   const writer = useWriter();
+  const openStudio = useImageStudio();
+  const shellRef = useRef<HTMLDivElement>(null);
   const { project, view, prefs, loading } = writer;
   useEffect(() => { setActiveImageProject(project?.id ?? null); }, [project?.id]);
   const editorRef = useRef<EditorApi | null>(null);
@@ -116,6 +119,12 @@ function Shell() {
     else writer.setPrefs({ showAssist: !writer.prefs.showAssist });
   }, [narrow, writer]);
 
+  useEffect(() => {
+    const panel = shellRef.current?.querySelector<HTMLElement>(assistOverlay ? ".w-assist.overlay" : ".w-rail.overlay");
+    if (!panel || (!assistOverlay && !railOverlay)) return;
+    return focusPluginPanel(panel, () => { setAssistOverlay(false); setRailOverlay(false); });
+  }, [assistOverlay, railOverlay, view, prefs.focusMode]);
+
   const openSettings = useCallback((tab: SettingsTab = "work") => { setSettingsTab(tab); setModal("settings"); }, []);
 
   /** Inspiration for wherever the author is: the open document, or the current view's lens. */
@@ -139,13 +148,14 @@ function Shell() {
       if (mod && event.key.toLowerCase() === "s") { event.preventDefault(); void writer.flush("manual"); }
       if (mod && event.key.toLowerCase() === "k") { event.preventDefault(); setModal((current) => (current === "palette" ? null : "palette")); }
       if (mod && event.shiftKey && event.key.toLowerCase() === "i") { event.preventDefault(); openInspireHere(); return; }
+      if (mod && !event.shiftKey && event.key.toLowerCase() === "i") { event.preventDefault(); toggleMargin(); return; }
       if (mod && !event.shiftKey && event.key.toLowerCase() === "l") { event.preventDefault(); writer.openAssist("chat", true); }
       if (mod && event.key === "\\") { event.preventDefault(); toggleRail(); }
       if (mod && event.shiftKey && event.key.toLowerCase() === "p" && !typingInField(event)) { event.preventDefault(); writer.setPrefs({ markdownPreview: !writer.prefs.markdownPreview }); }
       if (mod && event.shiftKey && event.key.toLowerCase() === "f" && !typingInField(event)) { event.preventDefault(); writer.setPrefs({ focusMode: !writer.prefs.focusMode }); }
     };
     return onViewKeyDown(onKey);
-  }, [openInspireHere, toggleRail, writer]);
+  }, [openInspireHere, toggleRail, toggleMargin, writer]);
 
   const paletteActions = useMemo(() => [
     { label: "新建章节", hint: "在当前章节之后", run: () => writer.addChapter(writer.active.kind === "chapter" ? { afterId: writer.active.id } : {}) },
@@ -168,14 +178,14 @@ function Shell() {
     { label: "立即保存", hint: "⌘S", run: () => void writer.flush("manual") },
   ], [activeChapterId, openInspireHere, openSettings, prefs.focusMode, prefs.markdownPreview, publish, toggleRail, writeNextChapter, writer]);
 
-  if (loading && !project) return <div className="w-loading"><LoaderCircle size={16} className="spin" /> 正在加载 Writer…</div>;
+  if (loading && !project) return <div className="w-loading" role="status" aria-label="正在加载 Writer"><div className="w-skeleton title" /><div className="w-skeleton" /><div className="w-skeleton short" /><span>正在打开作品…</span></div>;
   if (!project) {
     return (
       <div className="w-welcome">
         <section>
           <div className="w-empty-icon"><PenLine size={20} /></div>
           <h1>开始一部长篇作品</h1>
-          <p>Writer 为长篇创作而生：卷章管理、设定库、线索谱，以及能读懂几百万字作品的 AI 记忆。AI 的每一处修改都会先落在稿纸上，由你逐处决定。</p>
+          <p>新建作品或导入已有小说，开始写第一章。</p>
           <div className="w-row">
             <button type="button" className="w-btn primary" onClick={() => setModal("new")}><Plus size={14} />新建作品</button>
             <button type="button" className="w-btn" onClick={() => setModal("import")}><Import size={14} />导入已有小说</button>
@@ -202,7 +212,6 @@ function Shell() {
   const panelInMargin = writing && showAssist && !overlay && marginTab !== "chat" && !prefs.markdownPreview;
   const panelFloats = writing && (!showAssist || overlay) && !prefs.markdownPreview;
 
-  const openStudio = useImageStudio();
   const illustrateSelection = () => {
     const passage = selection.text;
     openStudio({ title: "为这段配图", material: passage, owners: writer.active.kind === "chapter" ? [`chapter:${writer.active.id}`] : [`doc:${writer.active.kind}`], pickLabel: "插入正文", onPick: (asset) => { const current = editorRef.current?.view(); if (current) insertImageAtCaret(current, imageMarkup(asset.id, asset.caption)); } });
@@ -214,14 +223,14 @@ function Shell() {
   );
 
   return (
-    <div className={`w-app ${focus ? "focus" : ""} ${studio ? "is-studio" : ""}`}>
-      {room ? <RoomHead onToggleMargin={toggleMargin} marginOpen={assistOpen} onPalette={() => setModal("palette")} /> : null}
+    <div ref={shellRef} className={`w-app ${focus ? "focus" : ""} ${studio ? "is-studio" : ""}`}>
+      {!focus ? <RoomHead onToggleRail={toggleRail} railOpen={showRail} onToggleMargin={toggleMargin} marginOpen={showAssist} marginAvailable={marginAvailable} onSettings={() => openSettings()} onPalette={() => setModal("palette")} /> : null}
       <div className="w-body">
         {showRail ? <Rail overlay={narrowRail} onImport={() => setModal("import")} onNewProject={() => setModal("new")} onPalette={() => setModal("palette")} onSettings={() => openSettings("work")} /> : null}
         {showRail && narrowRail ? <div className="w-drawer-backdrop" onMouseDown={() => setRailOverlay(false)} /> : null}
         <main className="w-main">
           <div className="w-view" key={view}>
-            {writing ? <WriteView editorRef={editorRef} pageScrollRef={pageScrollRef} onSelectionChange={setSelection} onSuggestionChange={selectionAi.setSuggestion} onWriteNextChapter={writeNextChapter} onBlocked={() => setModal("block")} onOpenSettings={(tab) => openSettings(tab as SettingsTab)} notes={notesApi.notes} activeNote={activeNote} onActiveNote={(id) => { setActiveNote(id); setMarginTab("notes"); }} railOpen={railOpen} onToggleRail={toggleRail} marginOpen={assistOpen} onToggleMargin={toggleMargin} floatingPanel={panelFloats ? selectionPanel("float") : null} /> : null}
+            {writing ? <WriteView editorRef={editorRef} pageScrollRef={pageScrollRef} onSelectionChange={setSelection} onSuggestionChange={selectionAi.setSuggestion} onWriteNextChapter={writeNextChapter} onBlocked={() => setModal("block")} onOpenSettings={(tab) => openSettings(tab as SettingsTab)} notes={notesApi.notes} activeNote={activeNote} onActiveNote={(id) => { setActiveNote(id); setMarginTab("notes"); }} floatingPanel={panelFloats ? selectionPanel("float") : null} /> : null}
             {view === "story" ? <StoryRoom onOpenChapter={(id, quote) => reveal(`chapter:${id}`, quote)} /> : null}
             {view === "archive" ? <ArchiveRoom onOpenChapter={(id, quote) => reveal(`chapter:${id}`, quote)} /> : null}
             {view === "bureau" ? <BureauView onOpenChapter={(id) => reveal(`chapter:${id}`)} /> : null}
@@ -238,7 +247,7 @@ function Shell() {
           </div>
         </main>
         {overlay ? <div className="w-assist-backdrop" onMouseDown={() => setAssistOverlay(false)} /> : null}
-        <AssistPanel hidden={!showAssist} overlay={overlay} room={view} planHost={planHost} tab={marginTab} onTab={setMarginTab} notesApi={notesApi} editorRef={editorRef} pageScrollRef={pageScrollRef} activeNote={activeNote} onActiveNote={setActiveNote} alignNotes={!overlay} selection={selection} editorSelection={() => editorRef.current?.selection() ?? EMPTY_SELECTION} onReveal={reveal} selectionPanel={panelInMargin ? selectionPanel("margin") : null} />
+        <AssistPanel onClose={toggleMargin} hidden={!showAssist} overlay={overlay} room={view} planHost={planHost} tab={marginTab} onTab={setMarginTab} notesApi={notesApi} editorRef={editorRef} pageScrollRef={pageScrollRef} activeNote={activeNote} onActiveNote={setActiveNote} alignNotes={!overlay} selection={selection} editorSelection={() => editorRef.current?.selection() ?? EMPTY_SELECTION} onReveal={reveal} selectionPanel={panelInMargin ? selectionPanel("margin") : null} />
       </div>
       {modal === "import" ? <ImportDialog onClose={() => setModal(null)} onImported={() => { setModal(null); writer.openArchive("memory"); }} /> : null}
       {modal === "settings" ? <SettingsDialog initialTab={settingsTab} onClose={() => setModal(null)} /> : null}
@@ -252,7 +261,7 @@ function Shell() {
 }
 
 /** The bar over the story and archive rooms: the book, the three rooms, and this room's lenses. */
-function RoomHead({ onToggleMargin, marginOpen, onPalette }: { onToggleMargin: () => void; marginOpen: boolean; onPalette: () => void }) {
+function RoomHead({ onToggleRail, railOpen, onToggleMargin, marginOpen, marginAvailable, onSettings, onPalette }: { onToggleRail: () => void; railOpen: boolean; onToggleMargin: () => void; marginOpen: boolean; marginAvailable: boolean; onSettings: () => void; onPalette: () => void }) {
   const writer = useWriter();
   const { project, view } = writer;
   if (!project) return null;
@@ -261,9 +270,14 @@ function RoomHead({ onToggleMargin, marginOpen, onPalette }: { onToggleMargin: (
   const openConflicts = writer.memory?.conflicts.filter((conflict) => conflict.status === "open").length ?? 0;
   return (
     <header className="w-room-head">
+      {view === "write" ? <button type="button" className="w-icon-btn" title="作品导航 ⌘\\" aria-label="作品导航" aria-pressed={railOpen} onClick={onToggleRail}><PanelLeft size={17} /></button> : null}
       <strong className="w-book-title">{project.title}</strong>
       <RoomSwitch />
-      <nav className="w-lenses" aria-label="视角">
+      <span className="w-spacer" />
+      <button type="button" className="w-text-btn plain" title="搜索与命令 ⌘K" onClick={onPalette}>搜索 <kbd className="w-kbd">⌘K</kbd></button>
+      <button type="button" className="w-icon-btn" title="作品设置" aria-label="作品设置" onClick={onSettings}><Settings size={17} /></button>
+      {marginAvailable && view !== "studio" ? <button type="button" className="w-icon-btn" title="页边 ⌘I" aria-label="页边" aria-pressed={marginOpen} onClick={onToggleMargin}><PanelRight size={17} /></button> : null}
+      {view === "story" || view === "archive" ? <nav className="w-lenses" aria-label="视角">
         {groups.map((group, index) => (
           <span key={index} className="w-lens-group">
             {group.map((lens) => (
@@ -273,10 +287,7 @@ function RoomHead({ onToggleMargin, marginOpen, onPalette }: { onToggleMargin: (
             ))}
           </span>
         ))}
-      </nav>
-      <span className="w-spacer" />
-      <button type="button" className="w-text-btn plain" onClick={onPalette}>⌘K</button>
-      <button type="button" className={`w-kicker-btn ${marginOpen ? "" : "off"}`} title="页边 ⌘L" aria-label="页边" aria-pressed={marginOpen} onClick={onToggleMargin}><PanelRight size={14} /></button>
+      </nav> : null}
     </header>
   );
 }
@@ -295,7 +306,7 @@ function Notices() {
         <div key={notice.id} className={`w-notice ${notice.tone}`}>
           <span>{notice.text}</span>
           {notice.action ? <button type="button" className="w-link" onClick={() => { notice.action?.run(); writer.dismiss(notice.id); }}>{notice.action.label}</button> : null}
-          <button type="button" className="w-icon-btn small" aria-label="关闭" onClick={() => writer.dismiss(notice.id)}><X size={13} /></button>
+          <button type="button" className="w-icon-btn small" aria-label="关闭" onClick={() => writer.dismiss(notice.id)} title="关闭"><X size={13} /></button>
         </div>
       ))}
     </div>

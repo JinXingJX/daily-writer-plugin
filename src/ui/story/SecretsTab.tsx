@@ -33,7 +33,7 @@ export function SecretsTab() {
               <div className="w-row">
                 <input className="w-input grow" value={secret.title} onChange={(event) => setSecret(secret.id, { title: event.currentTarget.value })} />
                 <select className="w-select small" value={secret.status} onChange={(event) => setSecret(secret.id, { status: event.currentTarget.value as SecretStatus })}>{(Object.keys(SECRET_STATUS_LABELS) as SecretStatus[]).map((status) => <option key={status} value={status}>{SECRET_STATUS_LABELS[status]}</option>)}</select>
-                <button type="button" className="w-icon-btn small" aria-label="删除" onClick={() => void remove(secret)}><Trash2 size={12} /></button>
+                <button type="button" className="w-icon-btn small" aria-label="删除" onClick={() => void remove(secret)} title="删除"><Trash2 size={12} /></button>
               </div>
               <OwnerImages owner={`secret:${secret.id}`} title={`「${secret.title}」配图`} material={`${secret.title}：${secret.truth}`} />
               <TextField label="真相" rows={3} value={secret.truth} onCommit={(value) => setSecret(secret.id, { truth: value })} />

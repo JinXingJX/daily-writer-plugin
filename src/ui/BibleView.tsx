@@ -127,7 +127,7 @@ function RelationEditor({ project }: { project: WriterProject }) {
               <td><input className="w-input" value={relation.relation} placeholder="师徒 / 宿敌 / 暗恋…" onChange={(event) => update(relation.id, { relation: event.currentTarget.value })} /></td>
               <td><select className="w-select small" value={relation.targetCharacterId} onChange={(event) => update(relation.id, { targetCharacterId: event.currentTarget.value })}>{[...names].map(([id, name]) => <option key={id} value={id}>{name}</option>)}</select></td>
               <td><input className="w-input" value={relation.startsAt} placeholder="从" onChange={(event) => update(relation.id, { startsAt: event.currentTarget.value })} /><input className="w-input" value={relation.endsAt} placeholder="到" onChange={(event) => update(relation.id, { endsAt: event.currentTarget.value })} /></td>
-              <td><button type="button" className="w-icon-btn small" aria-label="删除关系" onClick={() => writer.mutateProject((draft) => { draft.characterRelations = draft.characterRelations.filter((item) => item.id !== relation.id); })}><Trash2 size={13} /></button></td>
+              <td><button type="button" className="w-icon-btn small" aria-label="删除关系" onClick={() => writer.mutateProject((draft) => { draft.characterRelations = draft.characterRelations.filter((item) => item.id !== relation.id); })} title="删除关系"><Trash2 size={13} /></button></td>
             </tr>
           ))}
         </tbody>

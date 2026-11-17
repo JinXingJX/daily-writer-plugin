@@ -65,7 +65,7 @@ export function Composer({ inputRef, value, onChange, onSubmit, onStop, running,
   const scoped = mode === "agent";
 
   return (
-    <form className={`w-composer ${mode}`} onSubmit={(event) => { event.preventDefault(); if (!running) onSubmit(); }}>
+    <form className={`w-composer ${mode}`} onSubmit={(event) => { event.preventDefault(); if (!running && value.trim()) onSubmit(); }}>
       {options.length ? (
         <div className="w-mention-menu" role="listbox">
           {options.map((option, index) => <button key={option.key} type="button" role="option" aria-selected={index === highlight} className={index === highlight ? "active" : ""} onMouseDown={(event) => { event.preventDefault(); option.pick(); }}><span>{option.label}</span>{option.hint ? <small>{option.hint}</small> : null}</button>)}
@@ -84,7 +84,7 @@ export function Composer({ inputRef, value, onChange, onSubmit, onStop, running,
         rows={2}
         value={value}
         aria-label="对 AI 说"
-        placeholder={placeholder}
+        placeholder={running ? "可以先写下补充要求" : placeholder}
         onChange={(event) => { onChange(event.currentTarget.value); setCaret(event.currentTarget.selectionStart); setHighlight(0); }}
         onSelect={(event) => setCaret(event.currentTarget.selectionStart)}
         onKeyDown={(event) => {
@@ -93,14 +93,14 @@ export function Composer({ inputRef, value, onChange, onSubmit, onStop, running,
           if (options.length && event.key === "Escape") { event.preventDefault(); event.stopPropagation(); setDismissedAt(token?.start ?? null); return; }
           if (options.length && (event.key === "ArrowDown" || event.key === "ArrowUp")) { event.preventDefault(); setHighlight((current) => (current + (event.key === "ArrowDown" ? 1 : -1) + options.length) % options.length); return; }
           if (options.length && (event.key === "Enter" || event.key === "Tab")) { event.preventDefault(); pickHighlighted(); return; }
-          if (event.key === "Enter" && !event.shiftKey) { event.preventDefault(); if (!running) onSubmit(); }
+          if (event.key === "Enter" && (event.metaKey || event.ctrlKey)) { event.preventDefault(); if (!running && value.trim()) onSubmit(); }
         }}
       />
       <div className="w-composer-bar">
         <span>{running ? "AI 正在处理，可随时停止" : "/ 命令　@ 人物　# 章节"}</span>
         {running ? (
-          <button type="button" className="w-send stop" onClick={onStop} title="停止" aria-label="停止"><Square size={11} fill="currentColor" /></button>
-        ) : <button type="submit" className="w-send" disabled={!value.trim()} aria-label="发送"><ArrowUp size={15} /></button>}
+          <button type="button" className="w-send stop" onClick={onStop} title="停止" aria-label="停止"><Square size={11} fill="currentColor" />停止</button>
+        ) : <button type="submit" className="w-send" disabled={!value.trim()} title="发送 ⌘Enter" aria-label="发送"><ArrowUp size={15} /></button>}
       </div>
     </form>
   );

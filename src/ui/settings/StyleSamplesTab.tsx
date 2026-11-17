@@ -56,7 +56,7 @@ export function StyleSamplesTab() {
                 await removeSample(projectId, sample.id);
                 if (preview?.id === sample.id) setPreview(null);
                 await reload();
-              }}><Trash2 size={12} /></button>
+              }} title="删除"><Trash2 size={12} /></button>
             </li>
           ))}
         </ul>

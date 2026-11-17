@@ -1,9 +1,10 @@
-import { onViewKeyDown, observeViewSize } from "../view";
+import { focusPluginPanel } from "@daily/plugin-sdk";
+import { observeViewSize } from "../view";
 import ReactMarkdown, { defaultUrlTransform, type Components } from "react-markdown";
 import remarkBreaks from "remark-breaks";
 import remarkGfm from "remark-gfm";
 import { LoaderCircle, X } from "lucide-react";
-import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { activeImageUrl } from "../images/store";
 
 /** Matches the same view width as the CSS container queries. */
@@ -45,7 +46,7 @@ export function Tabs<T extends string>({ value, items, onChange, size = "md" }: 
   return (
     <div className={`w-tabs ${size}`} role="tablist">
       {items.map((item) => (
-        <button key={item.value} type="button" role="tab" aria-selected={value === item.value} className={value === item.value ? "active" : ""} onClick={() => onChange(item.value)}>
+        <button key={item.value} type="button" role="tab" aria-selected={value === item.value} tabIndex={value === item.value ? 0 : -1} onKeyDown={(event) => { const index = items.indexOf(item); const next = event.key === "ArrowRight" ? (index + 1) % items.length : event.key === "ArrowLeft" ? (index - 1 + items.length) % items.length : event.key === "Home" ? 0 : event.key === "End" ? items.length - 1 : -1; if (next < 0) return; event.preventDefault(); onChange(items[next].value); event.currentTarget.parentElement?.querySelectorAll<HTMLButtonElement>('[role="tab"]')[next]?.focus(); }} className={value === item.value ? "active" : ""} onClick={() => onChange(item.value)}>
           {item.label}{item.badge ? <span className="w-badge">{item.badge}</span> : null}
         </button>
       ))}
@@ -64,27 +65,17 @@ export function isComposing(event: { nativeEvent: KeyboardEvent } | KeyboardEven
 }
 
 // Open modals, innermost last: Escape only closes the top one (a confirm stacked on settings, for example).
-const modalStack: symbol[] = [];
 
 export function Modal({ title, onClose, children, footer, width = 560 }: { title: ReactNode; onClose: () => void; children: ReactNode; footer?: ReactNode; width?: number }) {
   const closeRef = useRef(onClose);
   closeRef.current = onClose;
-  useEffect(() => {
-    const id = Symbol("modal");
-    modalStack.push(id);
-    const onKey = (event: KeyboardEvent) => {
-      if (event.key !== "Escape" || isComposing(event) || modalStack[modalStack.length - 1] !== id) return;
-      event.preventDefault();
-      event.stopPropagation();
-      closeRef.current();
-    };
-    const off = onViewKeyDown(onKey);
-    return () => { off(); modalStack.splice(modalStack.indexOf(id), 1); };
-  }, []);
+  const panelRef = useRef<HTMLElement>(null);
+  const titleId = useId();
+  useEffect(() => panelRef.current ? focusPluginPanel(panelRef.current, () => closeRef.current()) : undefined, []);
   return (
     <div className="w-modal-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>
-      <section className="w-modal" style={{ width: `min(${width}px, calc(100cqw - 32px))` }} role="dialog" aria-modal="true">
-        <header className="w-modal-head"><strong>{title}</strong><button type="button" className="w-icon-btn" aria-label="关闭" onClick={onClose}><X size={16} /></button></header>
+      <section ref={panelRef} tabIndex={-1} aria-labelledby={titleId} className="w-modal" style={{ width: `min(${width}px, calc(100cqw - 32px))` }} role="dialog" aria-modal="true">
+        <header className="w-modal-head"><strong id={titleId}>{title}</strong><button type="button" className="w-icon-btn" title="关闭 Esc" aria-label="关闭" onClick={onClose}><X size={16} /></button></header>
         <div className="w-modal-body">{children}</div>
         {footer ? <footer className="w-modal-foot">{footer}</footer> : null}
       </section>

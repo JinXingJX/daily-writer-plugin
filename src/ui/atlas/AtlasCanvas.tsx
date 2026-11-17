@@ -395,7 +395,7 @@ export function AtlasCanvas(props: Props) {
         </g>
       </svg>
       {screenPoint && (contextMenu || title) ? <div className="w-atlas-map-card" role="dialog" aria-label={contextMenu ? "地图操作" : title} style={{ left: Math.max(12, Math.min(surface.width - cardWidth - 12, screenPoint.x + 18)), top: Math.max(12, Math.min(surface.height - 220, screenPoint.y - 24)), width: cardWidth }} onPointerDown={(e) => e.stopPropagation()}>
-        <button type="button" className="w-icon-btn small close" aria-label="关闭地图卡片" onClick={() => { onSelect(null); setHover(null); setContextMenu(null); }}><X size={12} /></button>
+        <button type="button" className="w-icon-btn small close" aria-label="关闭地图卡片" onClick={() => { onSelect(null); setHover(null); setContextMenu(null); }} title="关闭地图卡片"><X size={12} /></button>
         {contextMenu ? <><strong>在这里添加</strong><button type="button" className="w-btn small" onClick={() => { props.onContextAdd("place", contextMenu); setContextMenu(null); }}>地点</button><button type="button" className="w-btn small" onClick={() => { props.onContextAdd("event", contextMenu); setContextMenu(null); }}>事件</button></> : <>
           <strong>{title}</strong>
           {selection?.type === "place" && activePlace ? <><input key={`${activePlace.place.id}-name`} className="w-input" aria-label="地点名称" defaultValue={activePlace.place.name} onBlur={(e) => { if (e.currentTarget.value.trim()) props.onEditPlace(activePlace.place.id, { name: e.currentTarget.value }); }} /><select className="w-select" aria-label="地点显示方式" value={activePlace.place.display ?? "icon"} onChange={(e) => props.onEditPlace(activePlace.place.id, { display: e.currentTarget.value as "icon" | "marker" })}><option value="icon">独立图标</option><option value="marker">通用标记（建筑在底图中）</option></select></> : null}
@@ -412,9 +412,9 @@ export function AtlasCanvas(props: Props) {
         </>}
       </div> : null}
       <div className="w-atlas-zoom" role="group" aria-label="缩放">
-        <button type="button" aria-label="放大" onClick={() => zoomAt(1.4)}><Plus size={14} /></button>
-        <button type="button" aria-label="缩小" onClick={() => zoomAt(1 / 1.4)}><Minus size={14} /></button>
-        <button type="button" aria-label="显示全图" onClick={() => { setFit(true); setView({ x: 0, y: 0, k: 1 }); }}><Maximize size={13} /></button>
+        <button type="button" aria-label="放大" onClick={() => zoomAt(1.4)} title="放大"><Plus size={14} /></button>
+        <button type="button" aria-label="缩小" onClick={() => zoomAt(1 / 1.4)} title="缩小"><Minus size={14} /></button>
+        <button type="button" aria-label="显示全图" onClick={() => { setFit(true); setView({ x: 0, y: 0, k: 1 }); }} title="显示全图"><Maximize size={13} /></button>
       </div>
     </div>
   );
